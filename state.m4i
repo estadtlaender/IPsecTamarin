@@ -1,0 +1,106 @@
+define(<!init_state!>,<!// begin <!init_state()!>
+        role = '0'
+        // identities
+        IDi = '0'
+        IDr = '0'
+        // security parameter index (= session id?)
+        SPIi = '0'
+        SPIr = '0'
+        // DH parameters/keys
+        g = '0'
+        a = '0'
+        b = '0'
+        KEi = '0'
+        KEr = '0'
+        DH = '0'
+        // nonces
+        Ni = '0'
+        Nr = '0'
+        // derived keys
+        SK = '0'
+        SK_d = '0'
+        SK_ai = '0'
+        SK_ar = '0'
+        SK_ei = '0'
+        SK_er = '0'
+        SK_pi = '0'
+        SK_pr = '0'
+        // end <!init_state()!>dnl
+!>)dnl
+dnl
+define(<!set_state!>, <!// begin <!set_state()!>
+        role = prev_role
+        // identities
+        IDi = prev_IDi
+        IDr = prev_IDr
+        // security parameter index (= session id?)
+        SPIi = prev_SPIi
+        SPIr = prev_SPIr
+        // DH parameters/keys
+        g = prev_g
+        a = prev_a
+        b = prev_b
+        KEi = prev_KEi
+        KEr = prev_KEr
+        DH = prev_DH
+        // nonces
+        Ni = prev_Ni
+        Nr = prev_Nr
+        // derived keys
+        SK = prev_SK
+        SK_d = prev_SK_d
+        SK_ai = prev_SK_ai
+        SK_ar = prev_SK_ar
+        SK_ei = prev_SK_ei
+        SK_er = prev_SK_er
+        SK_pi = prev_SK_pi
+        SK_pr = prev_SK_pr
+        // end <!set_state()!>dnl
+!>)dnl
+dnl
+define(<!next_state!>, <!dnl
+role, dnl
+IDi, dnl
+IDr, dnl
+SPIi, dnl
+SPIr, dnl
+g, dnl
+a, dnl
+b, dnl
+KEi, dnl
+KEr, dnl
+DH, dnl
+Ni, dnl
+Nr, dnl
+SK, dnl
+SK_d, dnl
+SK_ai, dnl
+SK_ar, dnl
+SK_ei, dnl
+SK_er, dnl
+SK_pi, dnl
+SK_pr!>)dnl
+dnl
+define(<!prev_state!>, <!dnl
+prev_role, dnl
+prev_IDi, dnl
+prev_IDr, dnl
+prev_SPIi, dnl
+prev_SPIr, dnl
+prev_g, dnl
+prev_a, dnl
+prev_b, dnl
+prev_KEi, dnl
+prev_KEr, dnl
+prev_DH, dnl
+prev_Ni, dnl
+prev_Nr, dnl
+prev_SK, dnl
+prev_SK_d, dnl
+prev_SK_ai, dnl
+prev_SK_ar, dnl
+prev_SK_ei, dnl
+prev_SK_er, dnl
+prev_SK_pi, dnl
+prev_SK_pr!>)dnl
+dnl

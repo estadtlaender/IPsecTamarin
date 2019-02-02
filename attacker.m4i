@@ -1,0 +1,6 @@
+section{* Means of the attacker *}
+
+rule corrupt:
+    [ !Id(I, ltk) ]
+    --[ Corrupted(I, ltk) ]->
+    [ Out(ltk) ]

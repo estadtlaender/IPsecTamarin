@@ -1,0 +1,22 @@
+section{* Lemmata *}
+
+lemma honest_init:
+    exists-trace
+    "
+        Ex SPIi SPIr SK #i #j .
+        (
+            (ResponderKeyDerived(SPIi, SPIr, SK) @ #i &
+            InitiatorKeyDerived(SPIi, SPIr, SK) @ #j)
+        )
+    "
+
+lemma security_parameter_not_secure:
+    exists-trace
+    "
+        Ex SPIi SPIr SK1 SK2 #i #j .
+        (
+            ResponderKeyDerived(SPIi, SPIr, SK1) @ #i &
+            InitiatorKeyDerived(SPIi, SPIr, SK2) @ #j &
+            not(SK1 = SK2)
+        )
+    "

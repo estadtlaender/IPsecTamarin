@@ -1,0 +1,7 @@
+section{* Public-Key Infrastructure *}
+
+rule create_identity:
+    [ Fr(~ltk) ]
+    -->
+    [ !Id($P, ~ltk), !Pk($P, pk(~ltk)),
+      Out(pk(~ltk)) ]

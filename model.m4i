@@ -1,0 +1,30 @@
+section{* IPSec Model for Tamarin *}
+
+subsection{* Both *}
+
+functions:  // pseudo-random functions
+            prf/2, prfp/2,
+            // key-derivation
+            sk_d/1, sk_ai/1, sk_ar/1, sk_ei/1, sk_er/1, sk_pi/1, sk_pr/1,
+            // message authentication codes
+            mac/2, vrfy/3, true/0
+
+equations: vrfy(key, message, mac(key, message)) = true
+
+define(<!key_derivation!>, <!dnl
+SKEYSEED = prf(<Ni,Nr>, DH)
+        SK = prfp(SKEYSEED, <Ni,Nr,SPIi,SPIr>)
+        SK_d = sk_d(SK)                             // depends on negotiation!
+        SK_ai = sk_ai(SK)
+        SK_ar = sk_ar(SK)
+        SK_ei = sk_ei(SK)
+        SK_er = sk_er(SK)
+        SK_pi = sk_pi(SK)
+        SK_pr = sk_pr(SK)
+!>)
+
+include(model_initiator.m4i) dnl
+
+include(model_responder.m4i) dnl
+
+subsection{* Responder Model *}

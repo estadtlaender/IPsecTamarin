@@ -1,0 +1,81 @@
+subsection{* Responder Model *}
+
+// IKE_SA_INIT
+
+rule IKE_SA_INIT_responder_accept_g1:
+    let
+        init_state()
+
+        IDr = $R
+
+        // choose the first one
+        g = 'g1'
+
+        Hdr = in_Hdr
+        SAi1 = in_SAi1
+        KEi = in_KEi
+        Ni = in_Ni
+        SPIi = fst(Hdr)
+    in
+    [ !Id($R, ltkR),
+      In(<in_Hdr, in_SAi1, in_KEi, in_Ni>) ]
+    --[ Eq(g, fst(in_SAi1)) ]->                     // 2.2-2.3
+    [ State_R1(next_state()) ]
+
+rule IKE_SA_INIT_responder_reject:
+    let
+        init_state()
+
+        IDr = $R
+
+        g = 'g1'
+
+        Hdr = in_Hdr
+    in
+    [ !Id(IDr, ltkR),
+      In(<in_Hdr, in_SAi1, in_KEi, in_Ni>) ]        // 2.1
+    --[ Neq(g, fst(in_SAi1)),                       // 2.2-2.3
+        Eq(SPIr, snd(in_Hdr)),
+        Eq(SPIi, fst(in_Hdr)),
+        Aborted(Hdr, 'NO_PROPOSAL_CHOSEN') ]->
+    [ State_RX(next_state()),
+      Out(<Hdr, 'NO_PROPOSAL_CHOSEN', 'g1'>) ]      // 2.2-2.3
+
+rule IKE_SA_INIT_responder_send:
+    let
+        prev_g = 'g1'                               // FIXME!!!
+                                                    /*
+                                                    Here it's actually okay because our current
+                                                    assumption is that the responder only
+                                                    supports 'g1'
+                                                     */
+        set_state()
+
+        role = 'responder'                          // 3.1
+        SPIr = ~SPIr                                // 3.2
+        b = ~b                                      // 3.3
+        KEr = g ^ b                                 // 3.4
+        DH = KEi ^ b                                // 3.4
+        Nr = ~Nr
+
+        SAr1 = g                                    // 3.6
+        Hdr = <SPIi, SPIr>                          // 3.6
+    in
+    [ !Id(IDr, ltkR),
+      Fr(~SPIr), Fr(~b), Fr(~Nr),                   // 3.2-3.3, 3.5
+      State_R1(prev_state()) ]
+    -->
+    [ State_R2(next_state()),
+      Out(<Hdr, SAr1, KEr, Nr, 'CERTREQ'>) ]        // 3.6
+
+rule IKE_SA_INIT_responder_keyderivation:
+    let
+        set_state()
+
+        key_derivation()                            // 5.1 - 5.3
+    in
+    [ State_R2(prev_state()) ]
+    --[ ResponderKeyDerived(SPIi, SPIr, SK) ]->
+    [ State_R3(next_state()) ]
+
+// IKE_SA_AUTH

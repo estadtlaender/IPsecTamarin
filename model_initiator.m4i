@@ -1,0 +1,63 @@
+subsection{* Initiator Model *}
+
+// IKE_SA_INIT
+
+rule IKE_SA_INIT_initiator_send:
+    let
+        init_state()
+
+        IDi = $I
+
+        g = 'g1'                                    // choose publicly known group elements
+        gOther = 'g2'
+
+        role = 'initiator'                          // 1.1
+
+        SPIi = ~SPIi                                // 1.2
+        a = ~a                                      // 1.3
+        Ni = ~Ni                                    // 1.5
+
+        KEi = g^a                                   // 1.4
+
+        Hdr = <SPIi, SPIr>                          // 1.6
+        SAi1 = <g, gOther>                          // 1.6
+    in
+    [ !Id(IDi, ltk),
+      Fr(~SPIi), Fr(~a), Fr(~Ni) ]                  // 1.2, 1.3, 1.5
+    --[ Neq(g, gOther) ]->                          // ensure that offered group elements are different
+    [ State_I1(next_state()),
+      Out(<Hdr, SAi1, KEi, Ni>) ]                   // 1.6
+
+rule IKE_SA_INIT_initiator_accept:
+    let
+        prev_g = 'g1'                               // FIXME !!!
+        prev_a = ~a
+        set_state()
+
+        SPIr = snd(in_Hdr)
+        SAr1 = in_SAr1
+
+        Nr = in_Nr
+
+        KEr = in_KEr
+        Nr = in_Nr
+        DH = in_KEr^a                               // 4.3
+    in
+    [ !Id(IDi, ltkI),
+      State_I1(prev_state()),
+      In(<in_Hdr, in_SAr1, in_KEr, in_Nr, 'CERTREQ'>) ]         // 4.1 
+    --[ Eq(g, in_SAr1),                             // 4.2
+        Eq(SPIi, fst(in_Hdr)) ]->                   // sanity check of state
+    [ State_I2(next_state()) ]
+
+rule IKE_SA_INIT_initiator_keyderivation:
+    let
+        set_state()
+
+        key_derivation()                            // 5.1-5.3
+    in
+    [ State_I2(prev_state()) ]
+    --[ InitiatorKeyDerived(SPIi, SPIr, SK) ]->
+    [ State_I3(next_state()) ]
+
+// IKE_SA_AUTH
