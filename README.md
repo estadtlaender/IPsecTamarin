@@ -4,7 +4,8 @@ A (work-in-progress) implementation of IPsec in Tamarin-Prover for automated sec
 
 
 ## Dependencies
-* Tamarin-Prover 1.2.3. or later
+* Tamarin-Prover v1.2.3. or later
+* m4 v1.4.18 or later
 
 ## Building the Security Protocol Theory
 
